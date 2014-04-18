@@ -12,11 +12,15 @@
 
 /**  Filename: PhotoshopImages.java
 	@author Thomas Ruark, Photoshop Engineering, Adobe Systems Incorporated
+	
+	Modified 2014/04/18
+	@author naheon
 */
 
 package corp.adobe.photoshopimages;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import android.view.MenuInflater;
@@ -25,20 +29,20 @@ import android.view.MenuItem;
 import java.lang.Double;
 import java.util.Vector;
 
+import static corp.adobe.photoshopimages.ConnectActivity.CONNECT_IP;
+import static corp.adobe.photoshopimages.ConnectActivity.CONNECT_PASSWORD;
 
 /**
  * Android version for getting images from Photoshop.
  * This version is going to try and connect at launch and the background will
  * reflect the state of the connection.
 */
-public class PhotoshopImages extends Activity
+public class MainActivity extends Activity
 	implements ConfigureDialog.OnDoneListener {    
-
-	/** Name of the server to connect */
-	private String mServerNameText = new String("10.64.233.52" /*"192.168.16.1"*/);
 	
-	/** Server password to use */
-	private String mServerPasswordText = new String("123456" /*"Swordfish"*/);
+	// IP address and password to connect
+	private String mServerNameText;
+	private String mServerPasswordText;
 
 	/** have the border color reflect our connection status */
 	final private int BACKGROUND_COLOR_CONNECTED = 0xFFCCCCCC;
@@ -92,11 +96,18 @@ public class PhotoshopImages extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-   		mOutStandingTransactionIDs = new Vector<Integer>();
+    	mOutStandingTransactionIDs = new Vector<Integer>();
+    	setConnectionVariables();
     	tryToConnect();
    		mMainView = new ImagesView(this, (null != mMessageProcessor && mMessageProcessor.mIsConnected) ? BACKGROUND_COLOR_CONNECTED : BACKGROUND_COLOR_DISCONNECTED);
     	setContentView(mMainView);
-    	
+    }
+    
+    private void setConnectionVariables() {
+    	Intent intent = getIntent();
+    	// TODO: Exception handling
+    	mServerNameText = intent.getCharSequenceExtra(CONNECT_IP).toString();
+    	mServerPasswordText = intent.getCharSequenceExtra(CONNECT_PASSWORD).toString();
     }
 
     /** Called when the activity is gone.
@@ -175,7 +186,7 @@ public class PhotoshopImages extends Activity
      * @param inMessage - text to display
      */
     private void showMessage(String inMessage) {
-    	Toast.makeText(PhotoshopImages.this, inMessage, Toast.LENGTH_SHORT).show();
+    	Toast.makeText(MainActivity.this, inMessage, Toast.LENGTH_SHORT).show();
     }
 
     

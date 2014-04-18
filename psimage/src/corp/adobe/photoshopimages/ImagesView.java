@@ -141,7 +141,7 @@ class ImagesView extends View {
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		mViewWidth = w;
 		mViewHeight = h;
-		((PhotoshopImages)getContext()).onSizeChanged();
+		((MainActivity)getContext()).onSizeChanged();
 	}
 
 

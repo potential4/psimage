@@ -21,7 +21,7 @@ package corp.adobe.photoshopimages;
  * Photoshop (MessageProcessor) to the UI Activity (PhotoshopImages)
  */
 class MessageRunner implements Runnable {
-	final private PhotoshopImages mHostActivity;
+	final private MainActivity mHostActivity;
     final private String mCommandStr;
     final private String mExtraStr;
     final private byte [] mMessageBytes;
@@ -29,7 +29,7 @@ class MessageRunner implements Runnable {
     final private int mMessageID;
     final private int NO_BYTES = -1;
     	
-    MessageRunner(PhotoshopImages inActivity, String inCommand, String inExtra, int inID) {
+    MessageRunner(MainActivity inActivity, String inCommand, String inExtra, int inID) {
     	mHostActivity = inActivity;
     	mCommandStr = new String(inCommand);
     	mExtraStr = new String(inExtra);
@@ -38,7 +38,7 @@ class MessageRunner implements Runnable {
     	mMessageID = inID;
     }
     
-    MessageRunner(PhotoshopImages inActivity, byte [] inBytes, int inIndexer, int inID) {
+    MessageRunner(MainActivity inActivity, byte [] inBytes, int inIndexer, int inID) {
     	mHostActivity = inActivity;
     	mCommandStr = null;
     	mExtraStr = null;

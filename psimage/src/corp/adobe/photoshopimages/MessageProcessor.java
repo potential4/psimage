@@ -35,7 +35,7 @@ import javax.crypto.NoSuchPaddingException;
 class MessageProcessor extends Thread {
 
 	/** The main activity that started this thread */
-	private PhotoshopImages mMainActivity = null;
+	private MainActivity mMainActivity = null;
 	
 	/** Server name */
 	private String mServerName = null;
@@ -103,7 +103,7 @@ class MessageProcessor extends Thread {
     /** Keeps the main thread running waiting for messages from Photoshop */
     private boolean mKeepRunning;
     
-    MessageProcessor(PhotoshopImages inActivity, 
+    MessageProcessor(MainActivity inActivity, 
     		         String inServerName, 
     		         String inPassword) {
    		mMainActivity = inActivity;
