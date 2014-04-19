@@ -105,9 +105,8 @@ public class MainActivity extends Activity
     
     private void setConnectionVariables() {
     	Intent intent = getIntent();
-    	// TODO: Exception handling
-    	mServerNameText = intent.getCharSequenceExtra(CONNECT_IP).toString();
-    	mServerPasswordText = intent.getCharSequenceExtra(CONNECT_PASSWORD).toString();
+    	mServerNameText = intent.getStringExtra(CONNECT_IP);
+    	mServerPasswordText = intent.getStringExtra(CONNECT_PASSWORD);
     }
 
     /** Called when the activity is gone.
