@@ -21,23 +21,32 @@ package corp.adobe.photoshopimages;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Toast;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.Double;
 import java.util.Vector;
-
-import static corp.adobe.photoshopimages.ConnectActivity.CONNECT_IP;
-import static corp.adobe.photoshopimages.ConnectActivity.CONNECT_PASSWORD;
 
 /**
  * Android version for getting images from Photoshop.
  * This version is going to try and connect at launch and the background will
  * reflect the state of the connection.
 */
-public class MainActivity extends Activity implements ConfigureDialog.OnDoneListener {    
+public class MainActivity extends Activity implements ConfigureDialog.OnDoneListener {
+	
 	// IP address and password to connect
 	private String mServerNameText;
 	private String mServerPasswordText;
@@ -76,35 +85,35 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
     private Vector<Integer> mOutStandingTransactionIDs = null; // outstanding image request transaction IDs
     long mRequestTime = System.currentTimeMillis(); // time I requested last image
     double mLastTime = 0.0; // timing of last image, not correct when there is a backlog of requests
+    private GestureDetector mDetector;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	
     	mOutStandingTransactionIDs = new Vector<Integer>();
+    	
     	setConnectionVariables();
     	tryToConnect();
-   		mMainView = new ImagesView(this, (null != mMessageProcessor && mMessageProcessor.mIsConnected) ? BACKGROUND_COLOR_CONNECTED : BACKGROUND_COLOR_DISCONNECTED);
+   		
+    	mMainView = new ImagesView(this, (null != mMessageProcessor && mMessageProcessor.mIsConnected) ? BACKGROUND_COLOR_CONNECTED : BACKGROUND_COLOR_DISCONNECTED);
     	setContentView(mMainView);
+
+    	mDetector = new GestureDetector(this, new CaptureScreenOnDoubleTapListener((View)mMainView));
     }
     
-    private void setConnectionVariables() {
-    	Intent intent = getIntent();
-    	mServerNameText = intent.getStringExtra(CONNECT_IP);
-    	mServerPasswordText = intent.getStringExtra(CONNECT_PASSWORD);
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+		mDetector.onTouchEvent(event);
+    	return super.onTouchEvent(event);
     }
-
-    /** Called when the activity is gone.
-     * Get rid of our background thread.
-     */
+    
     @Override
     public void onDestroy() {
         super.onDestroy();
         mMessageProcessor.stopProcessing();
     }
 
-    /**
-     * Menu code
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	MenuInflater inflater = getMenuInflater();
@@ -121,6 +130,12 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
     		default:
     			return super.onOptionsItemSelected(item);    
     	}
+    }
+    
+    private void setConnectionVariables() {
+    	Intent intent = getIntent();
+    	mServerNameText = intent.getStringExtra(ConnectActivity.CONNECT_IP);
+    	mServerPasswordText = intent.getStringExtra(ConnectActivity.CONNECT_PASSWORD);
     }
     
     /**
@@ -357,5 +372,4 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
 	}
 
 } /* end public class PhotoshopImages extends Activity */
-
 // end PhotoshopImages.java
