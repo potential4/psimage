@@ -37,9 +37,7 @@ import static corp.adobe.photoshopimages.ConnectActivity.CONNECT_PASSWORD;
  * This version is going to try and connect at launch and the background will
  * reflect the state of the connection.
 */
-public class MainActivity extends Activity
-	implements ConfigureDialog.OnDoneListener {    
-	
+public class MainActivity extends Activity implements ConfigureDialog.OnDoneListener {    
 	// IP address and password to connect
 	private String mServerNameText;
 	private String mServerPasswordText;
@@ -72,27 +70,13 @@ public class MainActivity extends Activity
     private static final String ACTIVE_DOCUMENT_STR = new String("activeDocument");
     private static final String DOCUMENT_ID_STR = new String("documentID");
 
-    /** the current document ID */
-    private String mActiveDocumentID = new String("0");
+    private String mActiveDocumentID = new String("0"); // the current document ID
+    private ImagesView mMainView = null; // main view for this Activity
+    private int mOutStandingImageRequests = 0; // try to track how far behind I am in requests
+    private Vector<Integer> mOutStandingTransactionIDs = null; // outstanding image request transaction IDs
+    long mRequestTime = System.currentTimeMillis(); // time I requested last image
+    double mLastTime = 0.0; // timing of last image, not correct when there is a backlog of requests
     
-    /** main view for this Activity */
-    private ImagesView mMainView = null;
-    
-    /** try to track how far behind I am in requests */
-    private int mOutStandingImageRequests = 0;
-    
-    /** outstanding image request transaction IDs */
-    private Vector<Integer> mOutStandingTransactionIDs = null;
-    
-    /** time I requested last image */
-    long mRequestTime = System.currentTimeMillis();
-    
-    /** timing of last image, not correct when there is a backlog of requests */
-    double mLastTime = 0.0;
-    
-    /** Called when the activity is first created. 
-     * Start ImagesView
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -128,7 +112,6 @@ public class MainActivity extends Activity
     	return true;
     }
     
-    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
@@ -139,7 +122,6 @@ public class MainActivity extends Activity
     			return super.onOptionsItemSelected(item);    
     	}
     }
-
     
     /**
      * Called by the ConfigureDialog class
