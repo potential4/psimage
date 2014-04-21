@@ -104,8 +104,14 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
     
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-		mDetector.onTouchEvent(event);
-    	return super.onTouchEvent(event);
+    	mDetector.onTouchEvent(event);
+
+    	if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    		// TODO: Toggle the action bar
+    		return true;
+    	} else {
+    		return super.onTouchEvent(event);
+    	}
     }
     
     @Override
