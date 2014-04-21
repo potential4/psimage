@@ -16,22 +16,21 @@
 
 package corp.adobe.photoshopimages;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 
 /**
  * Display the current document from Photoshop
- * 
- *
  */
 class ImagesView extends View {
-
 	/** border size */
-	final static private int BORDER_SIZE = 10;
+	final static private int BORDER_SIZE = /*10*/ 0; // Remove border
 
 	/** the bitmap currently being displayed */
 	private Bitmap mBitmap = null;
@@ -50,7 +49,6 @@ class ImagesView extends View {
 
 	/** border color shows connection status */
 	private int mBorderColor = 0;
-
 	
 	/**
 	 * Constructor for our main view.
@@ -63,14 +61,14 @@ class ImagesView extends View {
 		mBorderColor = inBorderColor;
 		setFocusable(true);
         setFocusableInTouchMode(true);
+        
+        Activity mActivity = (Activity)context;
 	}
-
 
 	/** convert an unsigned byte to an integer */
 	private int unsignedByteToInt(byte b) {
 		return (int) b & 0xFF;
 	}
-
 
 	/**
 	 * This takes components that are already in pre multiplied form, and
@@ -133,7 +131,6 @@ class ImagesView extends View {
 		}
 	}
 
-
 	/**
 	 * After we initialize we get this call to tell us our current size.
 	 */
@@ -144,17 +141,14 @@ class ImagesView extends View {
 		((MainActivity)getContext()).onSizeChanged();
 	}
 
-
 	/**
 	 * Calculate the width and height of image
 	 */
 	public void setGrid() {
-
 		mBitmapWidth =  mViewWidth  - BORDER_SIZE * 2;
 		mBitmapHeight = mViewHeight - BORDER_SIZE * 2;
 
 	}
-
 
 	/**
 	 * The thread has called us with the bytes from Photoshop

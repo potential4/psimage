@@ -21,10 +21,10 @@ package corp.adobe.photoshopimages;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.widget.Toast;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuInflater;
@@ -33,10 +33,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.Double;
 import java.util.Vector;
 
@@ -45,7 +41,7 @@ import java.util.Vector;
  * This version is going to try and connect at launch and the background will
  * reflect the state of the connection.
 */
-public class MainActivity extends Activity implements ConfigureDialog.OnDoneListener {
+public class MainActivity extends /*Activity*/ActionBarActivity implements ConfigureDialog.OnDoneListener {
 	
 	// IP address and password to connect
 	private String mServerNameText;
@@ -86,6 +82,7 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
     long mRequestTime = System.currentTimeMillis(); // time I requested last image
     double mLastTime = 0.0; // timing of last image, not correct when there is a backlog of requests
     private GestureDetector mDetector;
+    private ActionBar mActionBar;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +97,7 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
     	setContentView(mMainView);
 
     	mDetector = new GestureDetector(this, new CaptureScreenOnDoubleTapListener((View)mMainView));
+    	mActionBar = getSupportActionBar();
     }
     
     @Override
@@ -107,7 +105,7 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
     	mDetector.onTouchEvent(event);
 
     	if (event.getAction() == MotionEvent.ACTION_DOWN) {
-    		// TODO: Toggle the action bar
+    		toggleActionBar();
     		return true;
     	} else {
     		return super.onTouchEvent(event);
@@ -133,6 +131,9 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
     		case R.id.configure:
     			new ConfigureDialog(this, this, mServerNameText, mServerPasswordText).show();
     			return true;
+    		case R.id.screenshot:
+    			
+    			return true;
     		default:
     			return super.onOptionsItemSelected(item);    
     	}
@@ -140,8 +141,16 @@ public class MainActivity extends Activity implements ConfigureDialog.OnDoneList
     
     private void setConnectionVariables() {
     	Intent intent = getIntent();
-    	mServerNameText = intent.getStringExtra(ConnectActivity.CONNECT_IP);
-    	mServerPasswordText = intent.getStringExtra(ConnectActivity.CONNECT_PASSWORD);
+    	mServerNameText = /*intent.getStringExtra(ConnectActivity.CONNECT_IP)*/ "192.168.0.6";
+    	mServerPasswordText = /*intent.getStringExtra(ConnectActivity.CONNECT_PASSWORD)*/ "bb1039";
+    }
+    
+    private void toggleActionBar() {
+    	if (mActionBar.isShowing()) {
+			mActionBar.hide();
+		} else {
+			mActionBar.show();
+		}
     }
     
     /**
