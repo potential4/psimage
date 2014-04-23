@@ -24,6 +24,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 /**
  * Display the current document from Photoshop
@@ -58,11 +61,16 @@ class ImagesView extends View {
 	 */
 	public ImagesView(Context context, int inBorderColor) {
 		super(context);
+
 		mBorderColor = inBorderColor;
 		setFocusable(true);
         setFocusableInTouchMode(true);
-        
-        Activity mActivity = (Activity)context;
+	}
+	
+	public Button getSyncButton() {
+		Button syncBtn = (Button) findViewById(R.id.syncBtn);
+		// TODO: make sure syncBtn is not null!
+		return syncBtn;
 	}
 
 	/** convert an unsigned byte to an integer */
@@ -108,7 +116,8 @@ class ImagesView extends View {
 	 */
 	@Override 
 	protected void onDraw(Canvas canvas) {
-		canvas.drawColor(mBorderColor);            
+		canvas.drawColor(mBorderColor);
+		
 		if (null != mBitmap) {
 			int xOffset = (mViewWidth - mBitmap.getWidth()) / 2;
 			if (xOffset < BORDER_SIZE) {

@@ -19,7 +19,6 @@
 
 package corp.adobe.photoshopimages;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -81,8 +80,9 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     private Vector<Integer> mOutStandingTransactionIDs = null; // outstanding image request transaction IDs
     long mRequestTime = System.currentTimeMillis(); // time I requested last image
     double mLastTime = 0.0; // timing of last image, not correct when there is a backlog of requests
+
     private GestureDetector mDetector;
-    private ActionBar mActionBar;
+    private OverlaidMenuHandler overlaidMenuHandler;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     	setContentView(mMainView);
 
     	mDetector = new GestureDetector(this, new CaptureScreenOnDoubleTapListener((View)mMainView));
-    	mActionBar = getSupportActionBar();
+    	overlaidMenuHandler = new OverlaidMenuHandler(mMainView, getSupportActionBar());
     }
     
     @Override
@@ -105,7 +105,7 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     	mDetector.onTouchEvent(event);
 
     	if (event.getAction() == MotionEvent.ACTION_DOWN) {
-    		toggleActionBar();
+    		overlaidMenuHandler.toggle();
     		return true;
     	} else {
     		return super.onTouchEvent(event);
@@ -131,9 +131,6 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     		case R.id.configure:
     			new ConfigureDialog(this, this, mServerNameText, mServerPasswordText).show();
     			return true;
-    		case R.id.screenshot:
-    			
-    			return true;
     		default:
     			return super.onOptionsItemSelected(item);    
     	}
@@ -143,14 +140,6 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     	Intent intent = getIntent();
     	mServerNameText = /*intent.getStringExtra(ConnectActivity.CONNECT_IP)*/ "192.168.0.6";
     	mServerPasswordText = /*intent.getStringExtra(ConnectActivity.CONNECT_PASSWORD)*/ "bb1039";
-    }
-    
-    private void toggleActionBar() {
-    	if (mActionBar.isShowing()) {
-			mActionBar.hide();
-		} else {
-			mActionBar.show();
-		}
     }
     
     /**
