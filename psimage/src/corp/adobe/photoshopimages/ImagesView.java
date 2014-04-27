@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -59,14 +60,21 @@ class ImagesView extends View {
 	 * @param context
 	 * @param inBorderColor
 	 */
-	public ImagesView(Context context, int inBorderColor) {
+	/*public ImagesView(Context context, int inBorderColor) {
 		super(context);
 
 		mBorderColor = inBorderColor;
 		setFocusable(true);
         setFocusableInTouchMode(true);
-	}
+	}*/
 	
+	public ImagesView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		
+		setFocusable(true);
+        setFocusableInTouchMode(true);
+	}
+
 	public Button getSyncButton() {
 		Button syncBtn = (Button) findViewById(R.id.syncBtn);
 		// TODO: make sure syncBtn is not null!
@@ -116,6 +124,7 @@ class ImagesView extends View {
 	 */
 	@Override 
 	protected void onDraw(Canvas canvas) {
+		Log.d("naheon", "imagesView-onDraw");
 		canvas.drawColor(mBorderColor);
 		
 		if (null != mBitmap) {

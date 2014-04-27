@@ -1,34 +1,30 @@
 package corp.adobe.photoshopimages;
 
 import android.support.v7.app.ActionBar;
+import android.view.View;
 import android.widget.Button;
 
 public class OverlaidMenuHandler {
 	private ActionBar mActionBar;
-	private ImagesView mMainView;
 	private Button mSyncBtn;
 	private boolean isShowing;
 	
-	public OverlaidMenuHandler(ImagesView imagesView, ActionBar actionBar) {
-		mMainView = imagesView;
+	public OverlaidMenuHandler(ActionBar actionBar, Button syncBtn) {
 		mActionBar = actionBar;
+		mSyncBtn = syncBtn;
 		
 		isShowing = mActionBar.isShowing() ? true : false;
-		mSyncBtn = imagesView.getSyncButton();
 	}
 	
 	public void toggle() {
 		if (isShowing) {
 			mActionBar.hide();
-			showSyncButton(false);
+			mSyncBtn.setVisibility(View.INVISIBLE);
 			isShowing = false;
 		} else {
 			mActionBar.show();
-			showSyncButton(true);
+			mSyncBtn.setVisibility(View.VISIBLE);
 			isShowing = true;
 		}
-	}
-	
-	private void showSyncButton(boolean show) {
 	}
 }

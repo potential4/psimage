@@ -21,6 +21,7 @@ package corp.adobe.photoshopimages;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.Toast;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -81,7 +82,7 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     long mRequestTime = System.currentTimeMillis(); // time I requested last image
     double mLastTime = 0.0; // timing of last image, not correct when there is a backlog of requests
 
-    private GestureDetector mDetector;
+    //private GestureDetector mDetector;
     private OverlaidMenuHandler overlaidMenuHandler;
     
     @Override
@@ -93,16 +94,21 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     	setConnectionVariables();
     	tryToConnect();
    		
-    	mMainView = new ImagesView(this, (null != mMessageProcessor && mMessageProcessor.mIsConnected) ? BACKGROUND_COLOR_CONNECTED : BACKGROUND_COLOR_DISCONNECTED);
-    	setContentView(mMainView);
+    	// mMainView = new ImagesView(this, (null != mMessageProcessor && mMessageProcessor.mIsConnected) ? BACKGROUND_COLOR_CONNECTED : BACKGROUND_COLOR_DISCONNECTED);
+    	// setContentView(mMainView);
+    	
+    	setContentView(R.layout.images_view);
+    	mMainView = (ImagesView)findViewById(R.id.imagesView);
+    	mMainView.setBorderColor((null != mMessageProcessor && mMessageProcessor.mIsConnected) ? BACKGROUND_COLOR_CONNECTED : BACKGROUND_COLOR_DISCONNECTED);
 
-    	mDetector = new GestureDetector(this, new CaptureScreenOnDoubleTapListener((View)mMainView));
-    	overlaidMenuHandler = new OverlaidMenuHandler(mMainView, getSupportActionBar());
+    	// mDetector = new GestureDetector(this, new CaptureScreenOnDoubleTapListener((View)mMainView));
+    	Button btn = (Button)findViewById(R.id.syncBtn);
+    	overlaidMenuHandler = new OverlaidMenuHandler(getSupportActionBar(), btn);
     }
     
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-    	mDetector.onTouchEvent(event);
+    	// mDetector.onTouchEvent(event);
 
     	if (event.getAction() == MotionEvent.ACTION_DOWN) {
     		overlaidMenuHandler.toggle();
