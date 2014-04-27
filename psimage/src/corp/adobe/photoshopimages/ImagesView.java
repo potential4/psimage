@@ -75,12 +75,6 @@ class ImagesView extends View {
         setFocusableInTouchMode(true);
 	}
 
-	public Button getSyncButton() {
-		Button syncBtn = (Button) findViewById(R.id.syncBtn);
-		// TODO: make sure syncBtn is not null!
-		return syncBtn;
-	}
-
 	/** convert an unsigned byte to an integer */
 	private int unsignedByteToInt(byte b) {
 		return (int) b & 0xFF;
@@ -124,7 +118,6 @@ class ImagesView extends View {
 	 */
 	@Override 
 	protected void onDraw(Canvas canvas) {
-		Log.d("naheon", "imagesView-onDraw");
 		canvas.drawColor(mBorderColor);
 		
 		if (null != mBitmap) {

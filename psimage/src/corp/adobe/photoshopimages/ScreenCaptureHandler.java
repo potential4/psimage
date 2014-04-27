@@ -5,32 +5,45 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.text.format.Time;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 
-class CaptureScreenOnDoubleTapListener extends GestureDetector.SimpleOnGestureListener {
-	private View mView;
+public class ScreenCaptureHandler {
+	private static ScreenCaptureHandler mHandler;
+	private View mImagesView;
+	private Time mTime;
 	
-	public CaptureScreenOnDoubleTapListener(View view) {
-		this.mView = view;
+	private final static String FOLDER_NAME = "PSIMAGE";
+	
+	private ScreenCaptureHandler(Context context) {
+		mImagesView = (ImagesView) ((Activity)context).findViewById(R.id.imagesView);
+		mImagesView.setDrawingCacheEnabled(true);
+		mTime = new Time();
 	}
 	
-	@Override
-    public boolean onDoubleTap(MotionEvent event) {
-		// Capture screen and save it to bitmap
-		View rootView = mView.getRootView();
-		rootView.setDrawingCacheEnabled(true);
-		Bitmap bitmap = rootView.getDrawingCache();
+	public static ScreenCaptureHandler getScreenCaptureHandler(Context context) {
+		if (mHandler == null) {
+			mHandler = new ScreenCaptureHandler(context);
+		}
 		
-		if (isExternalStorageWritable()) { // Check RW permission
-			File file = new File(getAlbumDirFile("TEST"), "test" + ".png");
+		return mHandler;
+	}
+
+	public void captureScreen() {
+		Bitmap bitmap = mImagesView.getDrawingCache();
+		
+		if (isExternalStorageWritable()) {
+			File file = new File(getAlbumDirFile(FOLDER_NAME), getTimeFlag() + ".png");
+			
 			try {
 				FileOutputStream out = new FileOutputStream(file);
 				bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+				//Log.d("naheon", "created");
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -40,9 +53,7 @@ class CaptureScreenOnDoubleTapListener extends GestureDetector.SimpleOnGestureLi
 				Log.d("naheon", "?");
 			} 
 		}
-		
-		return true;
-    }
+	}
 	
 	/** Check if external storage is available for read and write */
 	private boolean isExternalStorageWritable() {
@@ -65,5 +76,10 @@ class CaptureScreenOnDoubleTapListener extends GestureDetector.SimpleOnGestureLi
 		}
 		
 		return file;
+	}
+	
+	private String getTimeFlag() {
+		mTime.setToNow();
+		return mTime.format2445();
 	}
 }
