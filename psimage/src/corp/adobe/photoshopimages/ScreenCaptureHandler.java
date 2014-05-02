@@ -4,26 +4,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Environment;
-import android.text.format.Time;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 
 public class ScreenCaptureHandler {
 	private static ScreenCaptureHandler mHandler;
 	private View mImagesView;
-	private Time mTime;
+	private Activity mActivity;
 	
 	private final static String FOLDER_NAME = "PSIMAGE";
 	
 	private ScreenCaptureHandler(Context context) {
+		mActivity = (Activity) context;
 		mImagesView = (ImagesView) ((Activity)context).findViewById(R.id.imagesView);
 		mImagesView.setDrawingCacheEnabled(true);
-		mTime = new Time();
 	}
 	
 	public static ScreenCaptureHandler getScreenCaptureHandler(Context context) {
@@ -38,12 +42,17 @@ public class ScreenCaptureHandler {
 		Bitmap bitmap = mImagesView.getDrawingCache();
 		
 		if (isExternalStorageWritable()) {
-			File file = new File(getAlbumDirFile(FOLDER_NAME), getTimeFlag() + ".png");
+			File file = new File(getAlbumDirFile(FOLDER_NAME), getWorkspaceStr() + "_" + getTimeFlag() + ".png");
 			
 			try {
 				FileOutputStream out = new FileOutputStream(file);
 				bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-				//Log.d("naheon", "created");
+				
+				Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+				Uri contentUri = Uri.fromFile(file);
+				mediaScanIntent.setData(contentUri);
+				mActivity.sendBroadcast(mediaScanIntent);
+				
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -63,7 +72,7 @@ public class ScreenCaptureHandler {
 	    }
 	    return false;
 	}
-	
+
 	/** Create a directory under Pictures */
 	private File getAlbumDirFile(String albumName) {
 		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
@@ -79,7 +88,10 @@ public class ScreenCaptureHandler {
 	}
 	
 	private String getTimeFlag() {
-		mTime.setToNow();
-		return mTime.format2445();
+		return new SimpleDateFormat("yyMMdd_HHmmss").format(new Date());
+	}
+	
+	private String getWorkspaceStr() {
+		return "WS";
 	}
 }
