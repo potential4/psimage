@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 
@@ -27,7 +26,6 @@ public class ScreenCaptureHandler {
 	private ScreenCaptureHandler(Context context) {
 		mActivity = (Activity) context;
 		mImagesView = (ImagesView) ((Activity)context).findViewById(R.id.imagesView);
-		mImagesView.setDrawingCacheEnabled(true);
 	}
 	
 	public static ScreenCaptureHandler getScreenCaptureHandler(Context context) {
@@ -39,6 +37,7 @@ public class ScreenCaptureHandler {
 	}
 
 	public void captureScreen() {
+		mImagesView.buildDrawingCache();
 		Bitmap bitmap = mImagesView.getDrawingCache();
 		
 		if (isExternalStorageWritable()) {
@@ -53,6 +52,7 @@ public class ScreenCaptureHandler {
 				mediaScanIntent.setData(contentUri);
 				mActivity.sendBroadcast(mediaScanIntent);
 				
+				mImagesView.destroyDrawingCache();
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -60,7 +60,7 @@ public class ScreenCaptureHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 				Log.d("naheon", "?");
-			} 
+			}
 		}
 	}
 	
