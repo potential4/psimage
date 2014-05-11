@@ -83,6 +83,7 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     double mLastTime = 0.0; // timing of last image, not correct when there is a backlog of requests
 
     private OverlaidMenuHandler overlaidMenuHandler;
+    private String mWorkspaceStr;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     	
     	mOutStandingTransactionIDs = new Vector<Integer>();
     	
-    	setConnectionVariables();
+    	setConnectionVariables(getIntent());
     	tryToConnect();
    		
     	setContentView(R.layout.images_view);
@@ -99,6 +100,7 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
 
     	Button btn = (Button)findViewById(R.id.syncBtn);
     	overlaidMenuHandler = new OverlaidMenuHandler(this);
+    	setWorkspaceStr(getIntent());
     }
     
     @Override
@@ -135,10 +137,16 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     	}
     }
     
-    private void setConnectionVariables() {
-    	Intent intent = getIntent();
+    private void setConnectionVariables(Intent intent) {
+//    	Intent intent = getIntent();
     	mServerNameText = /*intent.getStringExtra(ConnectActivity.CONNECT_IP)*/ "192.168.0.6";
     	mServerPasswordText = /*intent.getStringExtra(ConnectActivity.CONNECT_PASSWORD)*/ "bb1039";
+    }
+    
+    private void setWorkspaceStr(Intent intent) {
+    	mWorkspaceStr = intent.getStringExtra(WorkspaceActivity.WORKSPACE);
+    	Log.d("naheon", "???" + mWorkspaceStr);
+    	overlaidMenuHandler.setTitle(mWorkspaceStr);
     }
     
     /**

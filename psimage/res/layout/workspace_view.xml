@@ -4,14 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <TextView
+    <EditText
         android:id="@+id/add_workspace"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="Add New Workspace">
-        
-    </TextView>
+        android:inputType="text"
+        android:imeOptions="actionSend"
+        android:hint="Add New Workspace">
+    </EditText>
     
      <ListView
         android:id="@+id/workspace_list"

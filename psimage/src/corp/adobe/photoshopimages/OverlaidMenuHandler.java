@@ -43,4 +43,8 @@ public class OverlaidMenuHandler {
 			isShowing = true;
 		}
 	}
+	
+	public void setTitle(String str) {
+		mActionBar.setTitle(str);
+	}
 }
