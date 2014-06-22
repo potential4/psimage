@@ -8,16 +8,31 @@
     <corp.adobe.photoshopimages.ImagesView
         android:id="@+id/imagesView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="matrix" />
 
-	<Button
-	    android:id="@+id/syncBtn"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    android:layout_centerHorizontal="true"
-	    android:layout_marginBottom="38dp"
-	    android:background="@android:color/transparent"
-	    android:drawableTop="@drawable/ic_action_camera" />
-    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="20dp" >
+        
+	    <Button
+		    android:id="@+id/fitToWidthBtn"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+			android:paddingRight="10dp"
+		    android:background="@android:color/transparent"
+		    android:drawableTop="@drawable/ic_fit_size" />
+		<Button
+		    android:id="@+id/screenCaptureBtn"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="@android:color/transparent"
+		    android:drawableTop="@drawable/ic_screen_capture" />
+		
+    </LinearLayout>
+    	
 </RelativeLayout>

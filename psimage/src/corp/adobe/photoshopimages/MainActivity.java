@@ -23,14 +23,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import java.lang.Double;
@@ -84,6 +83,8 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
 
     private OverlaidMenuHandler overlaidMenuHandler;
     private String mWorkspaceStr;
+    private ScaleGestureDetector mGestureDetector;
+    private float mScaleFactor = 1.f;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,17 +95,34 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     	setConnectionVariables(getIntent());
     	tryToConnect();
    		
+    	mGestureDetector = new ScaleGestureDetector(this, new GestureListener());
+    	
     	setContentView(R.layout.images_view);
     	mMainView = (ImagesView)findViewById(R.id.imagesView);
     	mMainView.setBorderColor((null != mMessageProcessor && mMessageProcessor.mIsConnected) ? BACKGROUND_COLOR_CONNECTED : BACKGROUND_COLOR_DISCONNECTED);
 
-    	Button btn = (Button)findViewById(R.id.syncBtn);
     	overlaidMenuHandler = new OverlaidMenuHandler(this);
     	setWorkspaceStr(getIntent());
     }
     
+    private class GestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+    	@Override
+    	public boolean onScale(ScaleGestureDetector detector) {
+    		
+    		mScaleFactor *= detector.getScaleFactor();
+    		
+    		// Set the highest and lowest limit of scale factor
+//    		mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f));
+    		Log.d("naheon", "onScale: " + mScaleFactor);
+    		return true;
+    	}
+    }
+    
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+    	// Pass event to ScaleGestureDetector to get pinch open & close.
+    	mGestureDetector.onTouchEvent(event);
+    	
     	if (event.getAction() == MotionEvent.ACTION_DOWN) {
     		overlaidMenuHandler.toggle();
     		return true;
@@ -138,14 +156,15 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
     }
     
     private void setConnectionVariables(Intent intent) {
-//    	Intent intent = getIntent();
-    	mServerNameText = /*intent.getStringExtra(ConnectActivity.CONNECT_IP)*/ "192.168.0.6";
-    	mServerPasswordText = /*intent.getStringExtra(ConnectActivity.CONNECT_PASSWORD)*/ "bb1039";
+    	mServerNameText = intent.getStringExtra(ConnectActivity.CONNECT_IP);
+    	mServerPasswordText = intent.getStringExtra(ConnectActivity.CONNECT_PASSWORD);
     }
     
     private void setWorkspaceStr(Intent intent) {
     	mWorkspaceStr = intent.getStringExtra(WorkspaceActivity.WORKSPACE);
-    	Log.d("naheon", "???" + mWorkspaceStr);
+    	if (mWorkspaceStr == null) {
+    		mWorkspaceStr = "WORKSPACE";
+    	}
     	overlaidMenuHandler.setTitle(mWorkspaceStr);
     }
     
@@ -381,6 +400,10 @@ public class MainActivity extends /*Activity*/ActionBarActivity implements Confi
 			}
 		}
 	}
+    
+    public ImagesView getImagesView() {
+    	return mMainView;
+    }
 
 } /* end public class PhotoshopImages extends Activity */
 // end PhotoshopImages.java

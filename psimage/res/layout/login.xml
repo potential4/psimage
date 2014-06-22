@@ -2,23 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
 
+    <ImageView
+        android:id="@+id/guide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/guide_connection">
+    </ImageView>
+    
     <EditText
 	    android:id="@+id/ip"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:hint="Enter IP address."/>
+	    android:hint="IPv4 Address"/>
     	
 	<EditText
 	    android:id="@+id/password"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:hint="password"/>
+	    android:hint="Password"/>
 
 	<Button
 	    android:id="@+id/connectBtn"
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="Connect"/>
 

@@ -16,14 +16,15 @@
 
 package corp.adobe.photoshopimages;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -54,6 +55,7 @@ class ImagesView extends View {
 	/** border color shows connection status */
 	private int mBorderColor = 0;
 	
+	private boolean mFitToScreenWidth = false;
 	/**
 	 * Constructor for our main view.
 	 * 
@@ -129,10 +131,22 @@ class ImagesView extends View {
 			if (yOffset < BORDER_SIZE) {
 				yOffset = BORDER_SIZE;
 			}
+			
 			int w = mBitmap.getWidth();
 			int h = mBitmap.getHeight();
 			if (w > 0 && h > 0) {
-				canvas.drawBitmap(mBitmap, xOffset, yOffset, null);
+				if (mFitToScreenWidth) {
+					float nuHeight = mBitmap.getHeight() * mViewWidth / mBitmap.getWidth();
+					float top = (mViewHeight - nuHeight) / 2;
+					float bottom = top + nuHeight;
+					
+					canvas.drawBitmap(mBitmap, null,
+							new RectF(0, top, mViewWidth, bottom),
+							null);
+					mFitToScreenWidth = false;
+				} else {
+					canvas.drawBitmap(mBitmap, xOffset, yOffset, null);
+				}
 			}
 		} else {
 			Paint paint = new Paint();
@@ -207,6 +221,11 @@ class ImagesView extends View {
 	public String createBitmapFromJPEG(byte [] inBytes, int inIndexer) {
 		mBitmap = BitmapFactory.decodeByteArray(inBytes, inIndexer, inBytes.length - inIndexer);
 		return null;
+	}
+	
+	public void resizeBitmapWithWidth() {
+		mFitToScreenWidth = true;
+		invalidate();
 	}
 
 } /* end ImagesView class */

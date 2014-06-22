@@ -11,23 +11,32 @@ import android.widget.Button;
 public class OverlaidMenuHandler {
 	private ActionBarActivity mActivity;
 	private ActionBar mActionBar;
-	private Button mSyncBtn;
+	private Button mCaptureBtn, mFitWidthBtn;
 	private boolean isShowing;
 	private ScreenCaptureHandler mScreenCaptureHandler;
+	private ChangeSizeHandler mChangeSizeHandler;
 	
 	public OverlaidMenuHandler(Context context) {
 		mActivity = (ActionBarActivity) context;
 		
 		mActionBar = mActivity.getSupportActionBar();
-		mSyncBtn = (Button) mActivity.findViewById(R.id.syncBtn);
+		mCaptureBtn = (Button) mActivity.findViewById(R.id.screenCaptureBtn);
+		mFitWidthBtn = (Button) mActivity.findViewById(R.id.fitToWidthBtn);
 		isShowing = mActionBar.isShowing() ? true : false;
 		
 		mScreenCaptureHandler = ScreenCaptureHandler.getScreenCaptureHandler(context);
-		
-		mSyncBtn.setOnClickListener(new OnClickListener() {
+		mCaptureBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				mScreenCaptureHandler.captureScreen();
+			}
+		});
+		
+		mChangeSizeHandler = ChangeSizeHandler.getChangeSizeHandler(context);
+		mFitWidthBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				mChangeSizeHandler.fitToWidth();
 			}
 		});
 	}
@@ -35,11 +44,13 @@ public class OverlaidMenuHandler {
 	public void toggle() {
 		if (isShowing) {
 			mActionBar.hide();
-			mSyncBtn.setVisibility(View.INVISIBLE);
+			mCaptureBtn.setVisibility(View.INVISIBLE);
+			mFitWidthBtn.setVisibility(View.INVISIBLE);
 			isShowing = false;
 		} else {
 			mActionBar.show();
-			mSyncBtn.setVisibility(View.VISIBLE);
+			mCaptureBtn.setVisibility(View.VISIBLE);
+			mFitWidthBtn.setVisibility(View.VISIBLE);
 			isShowing = true;
 		}
 	}
